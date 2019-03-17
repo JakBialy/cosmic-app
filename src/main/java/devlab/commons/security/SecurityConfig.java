@@ -1,6 +1,5 @@
 package devlab.commons.security;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -45,7 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                     System.out.println(auth.getName());
                     res.sendRedirect("/"); //home page
-
                 })
                 .failureHandler((req, res, exp) -> {
                     String errorMessage;
@@ -62,9 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessHandler((req, res, auth) -> {
-                   res.sendRedirect("/login");
-                })
+                .logoutSuccessHandler((req, res, auth) -> res.sendRedirect("/login"))
                 .permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/login") //403
@@ -83,9 +78,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(customUserService)
                 .passwordEncoder(passwordEncoder);
     }
-
-
-
-
 
 }
